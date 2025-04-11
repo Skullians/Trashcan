@@ -1,0 +1,46 @@
+[versions]
+# Paper
+paper-api = "1.19.3-R0.1-SNAPSHOT"
+paper-hooker = "1.0.1"
+paper-triumph-commands = "2.0.0-SNAPSHOT"
+paper-configlib = "4.5.0"
+paper-desertwell = "2.0.5"
+
+# Common
+common-redisson = "3.45.0"
+common-adventure-api = "4.18.0"
+common-reflections = "0.10.2"
+
+kotlin = "2.1.20"
+
+[libraries]
+# Common
+common-redisson = { group = "org.redisson", name = "redisson", version.ref = "common-redisson" }
+common-adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "common-adventure-api" }
+common-reflections = { group = "org.reflections", name = "reflections", version.ref = "common-reflections" }
+
+# Paper
+paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
+paper-hooker = { group = "info.preva1l.hooker", name = "Hooker", version.ref = "paper-hooker" }
+paper-triumph-commands = { group = "dev.triumphteam", name = "triumph-cmd-bukkit", version.ref = "paper-triumph-commands" }
+paper-configlib = { group = "de.exlll", name = "configlib-yaml", version.ref = "paper-configlib" }
+paper-desertwell = { group = "net.william278", name = "desertwell", version.ref = "paper-desertwell"}
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+shadow = { id = "com.gradleup.shadow", version = "9.0.0-beta11" }
+grgit = { id = "org.ajoberstar.grgit", version = "5.3.0" }
+pluginyml-paper = { id = "net.minecrell.plugin-yml.paper", version = "0.6.0" }
+
+[bundles]
+# Common
+common-provided = [ ]
+common-loaded = [ "common-redisson", "common-adventure-api", "common-reflections" ]
+common-included = [ ]
+common-relocated = [ ]
+
+# Paper
+paper-provided = [ "paper-api" ]
+paper-loaded = [ "paper-configlib", "paper-desertwell" ]
+paper-included = [ "paper-hooker" ]
+paper-relocated = [ "paper-triumph-commands" ]
