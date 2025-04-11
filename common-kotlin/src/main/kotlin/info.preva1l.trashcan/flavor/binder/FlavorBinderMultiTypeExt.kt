@@ -6,4 +6,4 @@ package info.preva1l.trashcan.flavor.binder
  * @param [T] the type to add
  * @return the current [FlavorBinderMultiType] instance
  */
-inline fun <reified T> info.preva1l.trashcan.flavor.binder.FlavorBinderMultiType.to(): info.preva1l.trashcan.flavor.binder.FlavorBinderMultiType = to(T::class.java)
+inline fun <reified T> FlavorBinderMultiType.to(): FlavorBinderMultiType = to(T::class.java)
