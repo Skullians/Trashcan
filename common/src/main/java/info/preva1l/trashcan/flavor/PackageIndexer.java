@@ -11,11 +11,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class PackageIndexer {
+    private final FlavorOptions options;
     private final Reflections reflections;
 
     public PackageIndexer(Class<?> clazz, FlavorOptions options) {
+        this.options = options;
         this.reflections = new Reflections(
                 new ConfigurationBuilder()
                         .forPackage(
@@ -50,12 +53,36 @@ public class PackageIndexer {
     }
 
     /**
+     * Gets all methods annotated with the specified annotation and invokes them.
+     *
+     * @param annotation the annotation type
+     */
+    public void invokeMethodsAnnotatedWith(Class<? extends Annotation> annotation) {
+        getMethodsAnnotatedWith(annotation)
+                .forEach(it -> {
+                    try {
+                        it.invoke(this);
+                    } catch (Exception e) {
+                        options.getLogger().log(
+                                Level.WARNING,
+                                String.join(" ",
+                                        "Failed to run container part",
+                                        it.getClass().getSimpleName(),
+                                        "on",
+                                        annotation.getSimpleName()
+                                ), e
+                        );
+                    }
+                });
+    }
+
+    /**
      * Returns a list of methods annotated with the specified annotation.
      *
      * @param annotation the annotation type
      * @return a list of methods annotated with the specified annotation
      */
-    public <T extends Annotation> List<Method>  getMethodsAnnotatedWith(Class<T> annotation) {
+    public <T extends Annotation> List<Method> getMethodsAnnotatedWith(Class<T> annotation) {
         return reflections
                 .get(annotated(annotation))
                 .stream()

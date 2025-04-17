@@ -10,6 +10,7 @@ import info.preva1l.trashcan.flavor.binder.defaults.DefaultPluginBinder;
 import info.preva1l.trashcan.plugin.annotations.PluginDisable;
 import info.preva1l.trashcan.plugin.annotations.PluginEnable;
 import info.preva1l.trashcan.plugin.annotations.PluginLoad;
+import info.preva1l.trashcan.plugin.annotations.PluginReload;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -43,19 +44,7 @@ public abstract class BasePlugin extends JavaPlugin {
 
         this.packageIndexer = flavor.reflections;
 
-        this.packageIndexer
-                .getMethodsAnnotatedWith(PluginLoad.class)
-                .forEach(it -> {
-                    try {
-                        it.invoke(this);
-                    } catch (Exception e) {
-                        getLogger().log(
-                                Level.WARNING,
-                                "Failed to run container part {} on PluginLoad",
-                                it.getClass().getSimpleName()
-                        );
-                    }
-                });
+        this.packageIndexer.invokeMethodsAnnotatedWith(PluginLoad.class);
 
         this.flavor.inherit(new DefaultPluginBinder(this))
                 .inherit(new DefaultManagersBinder(this));
@@ -63,40 +52,23 @@ public abstract class BasePlugin extends JavaPlugin {
 
     @Override
     public final void onEnable() {
-        this.packageIndexer
-                .getMethodsAnnotatedWith(PluginEnable.class)
-                .forEach(it -> {
-                    try {
-                        it.invoke(this);
-                    } catch (Exception e) {
-                        getLogger().log(
-                                Level.WARNING,
-                                "Failed to run container part {} on PluginEnable",
-                                it.getClass().getSimpleName()
-                        );
-                    }
-                });
+        this.packageIndexer.invokeMethodsAnnotatedWith(PluginEnable.class);
 
         flavor.startup();
     }
 
     @Override
     public final void onDisable() {
-        this.packageIndexer
-                .getMethodsAnnotatedWith(PluginDisable.class)
-                .forEach(it -> {
-                    try {
-                        it.invoke(this);
-                    } catch (Exception e) {
-                        getLogger().log(
-                                Level.WARNING,
-                                "Failed to run container part {} on PluginDisable",
-                                it.getClass().getSimpleName()
-                        );
-                    }
-                });
+        this.packageIndexer.invokeMethodsAnnotatedWith(PluginDisable.class);
 
         flavor.close();
+    }
+
+    /**
+     * Reloads your plugin, runs any methods annotated with @PluginReload
+     */
+    public final void reload() {
+        this.packageIndexer.invokeMethodsAnnotatedWith(PluginReload.class);
     }
 
     public final BukkitCommandManager<?> getCommandManager() {

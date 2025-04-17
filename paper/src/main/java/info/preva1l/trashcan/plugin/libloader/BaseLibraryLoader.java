@@ -53,6 +53,9 @@ public class BaseLibraryLoader implements PluginLoader {
         PluginLibraries libraries = new PluginLibraries(new HashMap<>(), new ArrayList<>());
         libraries.merge(load("trashcan-libraries.json"));
         libraries.merge(load("paper-libraries.json"));
+        // Dumpster
+        libraries.merge(load("dumpster-libraries.json"));
+        libraries.merge(load("dumpster-mongo-libraries.json"));
         libraries.addRepos(customRepositories());
         libraries.addDeps(customDependencies());
         return libraries;
@@ -61,7 +64,7 @@ public class BaseLibraryLoader implements PluginLoader {
     private PluginLibraries load(@NotNull String file) {
         PluginLibraries libraries;
         try (var in = getClass().getResourceAsStream("/" + file)) {
-            Objects.requireNonNull(in, file + " not found");
+            if (in == null) return new PluginLibraries(new HashMap<>(), Collections.emptyList());
             libraries = gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), PluginLibraries.class);
         } catch (IOException e) {
             Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage(), e);
