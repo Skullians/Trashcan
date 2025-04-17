@@ -17,7 +17,7 @@ plugins.withType<JavaPlugin> {
 dependencies {
     compileOnly(project(":dumpster-common"))
 
-    compileOnlyApiLibrary("ee")
+    compileOnlyApiLibrary(libs.dumpster.mongo)
 }
 
 paper {
@@ -38,4 +38,4 @@ tasks {
 }
 
 fun DependencyHandler.compileOnlyApiLibrary(dependencyNotation: Any): Dependency? =
-u    add("compileOnlyApiLibrary", dependencyNotation)
+    add("compileOnlyApiLibrary", dependencyNotation)
