@@ -13,6 +13,7 @@ paper-desertwell = "2.0.5"
 
 # Dumpster
 dumpster-mongo = "5.3.1"
+dumpster-gson = "2.13.0"
 
 kotlin = "2.1.20"
 
@@ -31,6 +32,7 @@ paper-desertwell = { group = "net.william278", name = "desertwell", version.ref 
 
 # Dumpster
 dumpster-mongo = { group = "org.mongodb", name = "mongodb-driver-sync", version.ref = "dumpster-mongo" }
+dumpster-gson = { group = "com.google.code.gson", name = "gson", version.ref = "dumpster-gson" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

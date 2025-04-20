@@ -9,7 +9,7 @@ import java.util.Map;
  * @author Preva1l
  */
 public class DumpsterDataService {
-    private final Map<Class<? extends Savable>, ObjectMapper<?>> mappers = new HashMap<>();
+    private final Map<Class<? extends Savable>, ObjectMapper> mappers = new HashMap<>();
 
 
 }

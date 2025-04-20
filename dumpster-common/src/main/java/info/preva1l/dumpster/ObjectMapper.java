@@ -8,7 +8,7 @@ import java.util.UUID;
  * @author Preva1l
  */
 public interface ObjectMapper {
-    Object read(UUID identifier);
+    Savable read(UUID identifier);
 
-    void write(UUID identifier, Object object);
+    void write(Savable object);
 }

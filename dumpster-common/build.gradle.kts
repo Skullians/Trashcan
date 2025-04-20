@@ -17,6 +17,7 @@ plugins.withType<JavaPlugin> {
 
 dependencies {
     api(project(":common"))
+    compileOnlyApi(libs.dumpster.gson)
 }
 
 paper {
