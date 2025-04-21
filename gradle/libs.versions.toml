@@ -1,6 +1,6 @@
 [versions]
 # Common
-common-redisson = "3.45.0"
+common-redisson = "3.45.1"
 common-adventure-api = "4.18.0"
 common-reflections = "0.10.2"
 
