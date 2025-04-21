@@ -12,7 +12,7 @@ paper-configlib = "4.5.0"
 paper-desertwell = "2.0.5"
 
 # Dumpster
-dumpster-mongo = "5.3.1"
+dumpster-mongo = "5.4.0"
 dumpster-gson = "2.13.0"
 
 kotlin = "2.1.20"
