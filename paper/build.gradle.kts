@@ -17,7 +17,6 @@ plugins.withType<JavaPlugin> {
 repositories {
     maven(url = "https://repo.papermc.io/repository/maven-public/")
     maven(url = "https://repo.triumphteam.dev/snapshots/")
-    maven(url = "https://repo.william278.net/releases/")
 }
 
 dependencies {

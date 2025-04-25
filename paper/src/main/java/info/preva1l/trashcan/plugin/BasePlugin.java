@@ -1,6 +1,7 @@
 package info.preva1l.trashcan.plugin;
 
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
+import info.preva1l.trashcan.Version;
 import info.preva1l.trashcan.flavor.Flavor;
 import info.preva1l.trashcan.flavor.FlavorOptions;
 import info.preva1l.trashcan.flavor.PackageIndexer;
@@ -14,7 +15,6 @@ import info.preva1l.trashcan.plugin.annotations.PluginReload;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 
 /**
  * The base plugin class to extend if you want the full function of Trashcan.
@@ -24,11 +24,13 @@ import java.util.logging.Level;
  *
  * @author Preva1l
  */
+@SuppressWarnings("UnstableApiUsage")
 public abstract class BasePlugin extends JavaPlugin {
+    protected final Version currentVersion =
+            Version.fromString(getPluginMeta() == null ? "1.0.0" : getPluginMeta().getVersion());
+
     protected Flavor flavor;
     protected PackageIndexer packageIndexer;
-
-    private BukkitCommandManager<?> commandManager;
 
     @Override
     public final void onLoad() {
@@ -71,11 +73,13 @@ public abstract class BasePlugin extends JavaPlugin {
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginReload.class);
     }
 
-    public final BukkitCommandManager<?> getCommandManager() {
-        return commandManager;
-    }
+    public abstract BukkitCommandManager<?> getCommandManager();
 
     public final <T> BukkitCommandManager<T> commandManager() {
-        return (BukkitCommandManager<T>) commandManager;
+        return (BukkitCommandManager<T>) getCommandManager();
+    }
+
+    public final Version getCurrentVersion() {
+        return currentVersion;
     }
 }
