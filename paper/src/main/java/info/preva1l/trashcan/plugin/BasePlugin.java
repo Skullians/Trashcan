@@ -49,7 +49,6 @@ public abstract class BasePlugin extends JavaPlugin {
 
         this.packageIndexer = flavor.reflections;
 
-        packageIndexer.reflections.getMethodsAnnotatedWith(PluginLoad.class).forEach(method -> System.out.println(method.getName()));
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginLoad.class);
 
         this.flavor.inherit(new DefaultPluginBinder(this))

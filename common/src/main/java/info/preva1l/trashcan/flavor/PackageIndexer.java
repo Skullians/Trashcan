@@ -71,7 +71,9 @@ public class PackageIndexer {
                                         "Failed to run container part",
                                         it.getClass().getSimpleName(),
                                         "on",
-                                        annotation.getSimpleName()
+                                        annotation.getSimpleName(),
+                                        ":",
+                                        it.getName()
                                 ), e
                         );
                     }
