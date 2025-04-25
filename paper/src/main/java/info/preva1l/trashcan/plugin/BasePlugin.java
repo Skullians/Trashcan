@@ -31,6 +31,14 @@ public abstract class BasePlugin extends JavaPlugin {
 
     @Override
     public final void onLoad() {
+        // Resolve all plugin annotations here, preventing class not found exceptions on shutdown
+        try {
+            Class.forName("info.preva1l.trashcan.plugin.annotations.PluginLoad");
+            Class.forName("info.preva1l.trashcan.plugin.annotations.PluginEnable");
+            Class.forName("info.preva1l.trashcan.plugin.annotations.PluginDisable");
+            Class.forName("info.preva1l.trashcan.plugin.annotations.PluginReload");
+        } catch (ClassNotFoundException ignored) {}
+
         this.flavor = Flavor.create(
                 this.getClass(),
                 new FlavorOptions(
