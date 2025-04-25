@@ -34,7 +34,7 @@ subprojects {
 
     tasks {
         withType<ShadowJar> {
-            exclude("META-INF/maven/**", "org/**")
+            exclude("META-INF/maven/**", "org/**", "paper-plugin.yml")
             archiveClassifier.set("")
         }
 

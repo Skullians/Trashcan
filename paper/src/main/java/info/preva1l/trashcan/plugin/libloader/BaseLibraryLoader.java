@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * </p>
  *
  * Created on 11/04/2025
- *an
+ *
  * @author Preva1l
  */
 @SuppressWarnings({"UnstableApiUsage", "unused"})

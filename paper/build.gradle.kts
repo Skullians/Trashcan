@@ -28,7 +28,6 @@ dependencies {
     compileOnlyApiLibrary(libs.bundles.common.loaded)
 
     api(libs.bundles.paper.included)
-    implementation(libs.bundles.paper.relocated)
 }
 
 paper {
@@ -44,8 +43,6 @@ tasks {
 
     withType<ShadowJar> {
         dependsOn(":common:shadowJar")
-        relocate("dev.triumphteam.cmd", "${rootProject.group}.commands")
-        exclude("paper-plugin.yml")
     }
 }
 
