@@ -55,6 +55,7 @@ tasks {
     }
 
     withType<Test> {
+        dependsOn(":common:shadowJar")
         useJUnitPlatform()
     }
 }
