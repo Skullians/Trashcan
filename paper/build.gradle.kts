@@ -28,6 +28,15 @@ dependencies {
     compileOnlyApiLibrary(libs.bundles.common.loaded)
 
     api(libs.bundles.paper.included)
+
+
+    testImplementation(libs.bundles.paper.loaded)
+    testImplementation(libs.bundles.common.loaded)
+    testImplementation(libs.bundles.paper.included)
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.20:3.93.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.11.4")
 }
 
 paper {
@@ -43,6 +52,10 @@ tasks {
 
     withType<ShadowJar> {
         dependsOn(":common:shadowJar")
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
     }
 }
 

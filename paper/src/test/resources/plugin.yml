@@ -1,0 +1,4 @@
+name: TestPlugin
+api-version: 1.19
+main: info.preva1l.fadah.TestPlugin
+version: 1.0.0

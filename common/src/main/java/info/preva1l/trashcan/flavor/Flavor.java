@@ -39,7 +39,7 @@ public class Flavor {
      * Creates a new {@link Flavor} instance using T's {@link Class},
      * and the {@code options}, if any are given.
      */
-    public static <T> Flavor create(T initializer, FlavorOptions options){
+    public static <T> Flavor create(T initializer, FlavorOptions options) {
         return new Flavor(initializer.getClass(), options);
     }
 
@@ -50,7 +50,7 @@ public class Flavor {
      * @param options the flavor options
      * @return a new {@link Flavor} instance
      */
-    public static Flavor create(Class<?> initializer, FlavorOptions options){
+    public static Flavor create(Class<?> initializer, FlavorOptions options) {
         return new Flavor(initializer, options);
     }
 
@@ -297,7 +297,7 @@ public class Flavor {
      *
      * @return the singleton instance, or null if there is none
      */
-    public Object objectInstance(Class<?> clazz) {
+    public static Object objectInstance(Class<?> clazz) {
         Field instanceField;
         try {
             instanceField = clazz.getField("INSTANCE");

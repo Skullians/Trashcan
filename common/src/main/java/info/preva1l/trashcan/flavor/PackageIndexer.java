@@ -9,34 +9,28 @@ import org.reflections.util.QueryFunction;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 public class PackageIndexer {
+    private final Class<?> clazz;
     private final FlavorOptions options;
-    private final Reflections reflections;
+    public final Reflections reflections;
 
     public PackageIndexer(Class<?> clazz, FlavorOptions options) {
+        this.clazz = clazz;
         this.options = options;
-        this.reflections = new Reflections(
-                new ConfigurationBuilder()
-                        .forPackage(
-                                options.getMainPackage() != null ? options.getMainPackage() : clazz.getPackageName(),
-                                clazz.getClassLoader()
-                        )
-                        .addUrls(
-                                options.getAdditionalPackages()
-                                        .stream()
-                                        .flatMap(it -> ClasspathHelper.forPackage(it, clazz.getClassLoader()).stream())
-                                        .toList()
-                        )
-                        .addScanners(
-                                Scanners.MethodsAnnotated,
-                                Scanners.TypesAnnotated,
-                                Scanners.SubTypes
-                        )
-        );
+        ConfigurationBuilder config = new ConfigurationBuilder()
+                .forPackage(options.getMainPackage(), clazz.getClassLoader())
+                .setParallel(true)
+                .addScanners(
+                        Scanners.MethodsAnnotated,
+                        Scanners.TypesAnnotated,
+                        Scanners.SubTypes
+                );
+        this.reflections = new Reflections(config);
     }
 
     /**
@@ -54,6 +48,9 @@ public class PackageIndexer {
 
     /**
      * Gets all methods annotated with the specified annotation and invokes them.
+     * <p>
+     *     Method must either be static or in a singleton ({@code public static final Instance instance})
+     * </p>
      *
      * @param annotation the annotation type
      */
@@ -61,7 +58,12 @@ public class PackageIndexer {
         getMethodsAnnotatedWith(annotation)
                 .forEach(it -> {
                     try {
-                        it.invoke(this);
+                        Object target = Modifier.isStatic(it.getModifiers())
+                                ? null
+                                : Flavor.objectInstance(it.getDeclaringClass());
+
+                        it.setAccessible(true);
+                        it.invoke(target);
                     } catch (Exception e) {
                         options.getLogger().log(
                                 Level.WARNING,
@@ -114,7 +116,7 @@ public class PackageIndexer {
     public <T> QueryFunction<Store, Method> annotated(Class<T> annotation) {
         return Scanners.MethodsAnnotated
                 .with(annotation)
-                .as(Method.class);
+                .as(Method.class, clazz.getClassLoader());
     }
 
     /**

@@ -5,7 +5,6 @@ import info.preva1l.trashcan.Version;
 import info.preva1l.trashcan.flavor.Flavor;
 import info.preva1l.trashcan.flavor.FlavorOptions;
 import info.preva1l.trashcan.flavor.PackageIndexer;
-import info.preva1l.trashcan.flavor.annotations.ServicesPackage;
 import info.preva1l.trashcan.flavor.binder.defaults.DefaultManagersBinder;
 import info.preva1l.trashcan.flavor.binder.defaults.DefaultPluginBinder;
 import info.preva1l.trashcan.plugin.annotations.PluginDisable;
@@ -13,8 +12,6 @@ import info.preva1l.trashcan.plugin.annotations.PluginEnable;
 import info.preva1l.trashcan.plugin.annotations.PluginLoad;
 import info.preva1l.trashcan.plugin.annotations.PluginReload;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Arrays;
 
 /**
  * The base plugin class to extend if you want the full function of Trashcan.
@@ -34,18 +31,17 @@ public abstract class BasePlugin extends JavaPlugin {
 
     @Override
     public final void onLoad() {
-        var servicesAnnotation = getClass().getAnnotation(ServicesPackage.class);
         this.flavor = Flavor.create(
                 this.getClass(),
                 new FlavorOptions(
                         this.getLogger(),
-                        null,
-                        Arrays.stream(servicesAnnotation != null ? servicesAnnotation.value() : new String[0]).toList()
+                        this.getClass().getPackageName()
                 )
         );
 
         this.packageIndexer = flavor.reflections;
 
+        packageIndexer.reflections.getMethodsAnnotatedWith(PluginLoad.class).forEach(method -> System.out.println(method.getName()));
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginLoad.class);
 
         this.flavor.inherit(new DefaultPluginBinder(this))
