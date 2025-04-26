@@ -1,5 +1,6 @@
 package info.preva1l.trashcan.plugin;
 
+import info.preva1l.hooker.Hooker;
 import info.preva1l.trashcan.Version;
 import info.preva1l.trashcan.flavor.Flavor;
 import info.preva1l.trashcan.flavor.FlavorOptions;
@@ -52,6 +53,13 @@ public abstract class BasePlugin extends JavaPlugin {
 
         this.flavor.inherit(new DefaultPluginBinder(this))
                 .inherit(new DefaultManagersBinder(this));
+
+        try {
+            if (Hooker.class.getDeclaredField("instance").get(null) == null) {
+                Hooker.register(this, "info.preva1l");
+            }
+        } catch (Exception ignored) {}
+        Hooker.load();
     }
 
     @Override
@@ -59,10 +67,14 @@ public abstract class BasePlugin extends JavaPlugin {
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginEnable.class);
 
         flavor.startup();
+
+        Hooker.enable();
     }
 
     @Override
     public final void onDisable() {
+        Hooker.disable();
+
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginDisable.class);
 
         flavor.close();
@@ -73,6 +85,7 @@ public abstract class BasePlugin extends JavaPlugin {
      */
     public final void reload() {
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginReload.class);
+        Hooker.reload();
     }
 
     public final Version getCurrentVersion() {
