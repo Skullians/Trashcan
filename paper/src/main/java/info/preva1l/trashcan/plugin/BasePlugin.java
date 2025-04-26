@@ -55,7 +55,9 @@ public abstract class BasePlugin extends JavaPlugin {
                 .inherit(new DefaultManagersBinder(this));
 
         try {
-            if (Hooker.class.getDeclaredField("instance").get(null) == null) {
+            var hooker = Hooker.class.getDeclaredField("instance");
+            hooker.setAccessible(true);
+            if (hooker.get(null) == null) {
                 Hooker.register(this, "info.preva1l");
             }
         } catch (Exception ignored) {}
