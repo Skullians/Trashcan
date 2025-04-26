@@ -1,6 +1,5 @@
 package info.preva1l.trashcan.plugin;
 
-import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
 import info.preva1l.trashcan.Version;
 import info.preva1l.trashcan.flavor.Flavor;
 import info.preva1l.trashcan.flavor.FlavorOptions;
@@ -74,12 +73,6 @@ public abstract class BasePlugin extends JavaPlugin {
      */
     public final void reload() {
         this.packageIndexer.invokeMethodsAnnotatedWith(PluginReload.class);
-    }
-
-    public abstract BukkitCommandManager<?> getCommandManager();
-
-    public final <T> BukkitCommandManager<T> commandManager() {
-        return (BukkitCommandManager<T>) getCommandManager();
     }
 
     public final Version getCurrentVersion() {
