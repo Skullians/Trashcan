@@ -14,7 +14,7 @@ import java.util.logging.SimpleFormatter;
  * @author Preva1l
  */
 public class ServiceLogFormatter extends SimpleFormatter {
-    private final static String FORMAT = "[%tT %s]: [%s] [%s] %s%s";
+    private final static String FORMAT = "[%tT %s]: [%s] [Services] [%s] %s%s";
     private final static String ANONYMOUS_SERVICE = "Anonymous Service";
     private final static ZoneId ZONE_ID = ZoneId.systemDefault();
 

@@ -61,7 +61,7 @@ public class TrashcanTests {
         String testString = "Hello World!";
 
         String expected = String.format(
-                "[%tT INFO]: [TestPlugin] [TestService] " + testString,
+                "[%tT INFO]: [TestPlugin] [Services] [TestService] " + testString,
                 ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
         );
 
