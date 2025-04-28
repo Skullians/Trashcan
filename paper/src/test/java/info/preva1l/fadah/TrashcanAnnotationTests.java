@@ -39,9 +39,27 @@ public class TrashcanAnnotationTests {
     }
 
     @Test
+    @DisplayName("Test Service Configures")
+    public void testServiceConfigures() {
+        Assertions.assertTrue(TestService.configured);
+    }
+
+    @Test
+    @DisplayName("Test Dependency Injection")
+    public void testDependencyInjection() {
+        Assertions.assertTrue(TestService.injected);
+    }
+
+    @Test
     @DisplayName("Test Plugin Loads")
     public void testPluginDisables() {
         serverMock.getPluginManager().disablePlugin(plugin);
         Assertions.assertTrue(plugin.disabled);
+    }
+
+    @Test
+    @DisplayName("Test Service Closes")
+    public void testServiceCloses() {
+        Assertions.assertTrue(TestService.closed);
     }
 }

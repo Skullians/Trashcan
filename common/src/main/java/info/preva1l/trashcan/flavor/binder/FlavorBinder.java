@@ -53,4 +53,8 @@ public class FlavorBinder<T> {
     public Predicate<Annotation> getAnnotationCheck(Class<?> annotation) {
         return ((Predicate<Annotation>) annotationChecks.get(annotation));
     }
+
+    public Class<?> getClazz() {
+        return clazz;
+    }
 }

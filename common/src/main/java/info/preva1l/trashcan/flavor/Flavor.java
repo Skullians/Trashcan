@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -219,14 +220,15 @@ public class Flavor {
                 // of the field's type
                 List<FlavorBinder<?>> bindersOfType = binders
                         .stream()
-                        .filter(it -> it.getClass() == field.getType())
+                        .filter(it -> it.getClazz().isAssignableFrom(field.getType()))
                         .collect(Collectors.toList());
 
                 for (FlavorBinder<?> flavorBinder : bindersOfType) {
                     for (Annotation annotation : field.getDeclaredAnnotations()) {
                         // making sure if there are any annotation
                         // checks, that the field passes the check
-                        boolean passesCheck = flavorBinder.getAnnotationCheck(annotation.getClass()).test(annotation);
+                        Predicate<Annotation> predicate = flavorBinder.getAnnotationCheck(annotation.getClass());
+                        boolean passesCheck = predicate == null || predicate.test(annotation);
 
                         if (!passesCheck) {
                             bindersOfType.remove(flavorBinder);
