@@ -264,6 +264,7 @@ public class Flavor {
         services.put(clazz, singleton);
 
         Service service = clazz.getDeclaredAnnotation(Service.class);
+        String serviceName = !service.name().isEmpty() ? service.name() : clazz.getSimpleName();
 
         long milli = tracked(() -> configure.ifPresent(it -> {
             try {
@@ -271,7 +272,7 @@ public class Flavor {
             } catch (IllegalAccessException | InvocationTargetException e) {
                 options.getLogger().log(
                         Level.SEVERE,
-                        "An exception was thrown while configuring service - {}",
+                        "An exception was thrown while configuring service - " + serviceName,
                         e
                 );
             }
@@ -280,16 +281,9 @@ public class Flavor {
         // making sure an exception wasn't thrown
         // while trying to configure the service
         if (milli != -1L) {
-            options.getLogger().info("[Services] [%s] Loaded in %sms."
-                    .formatted(
-                            !service.name().isEmpty() ? service.name() : clazz.getSimpleName(),
-                            milli
-                    )
-            );
+            options.getLogger().info("[Services] [%s] Loaded in %sms.".formatted(serviceName, milli));
         } else {
-            options.getLogger().info("[Services] [%s] Failed to load!"
-                    .formatted(!service.name().isEmpty() ? service.name() : clazz.getSimpleName())
-            );
+            options.getLogger().info("[Services] [%s] Failed to load!".formatted(serviceName));
         }
     }
 
