@@ -280,14 +280,14 @@ public class Flavor {
         // making sure an exception wasn't thrown
         // while trying to configure the service
         if (milli != -1L) {
-            options.getLogger().info("[Services] Loaded [%s] in %sms."
+            options.getLogger().info("[Services] [%s] Loaded in %sms."
                     .formatted(
                             !service.name().isEmpty() ? service.name() : clazz.getSimpleName(),
                             milli
                     )
             );
         } else {
-            options.getLogger().info("[Services] Failed to load [%s]!"
+            options.getLogger().info("[Services] [%s] Failed to load!"
                     .formatted(!service.name().isEmpty() ? service.name() : clazz.getSimpleName())
             );
         }

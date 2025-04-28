@@ -23,19 +23,16 @@ public class TestPlugin extends BasePlugin {
 
     @PluginLoad
     public void load() {
-        System.out.println("Plugin load");
         loaded = true;
     }
 
     @PluginEnable
     public void enable() {
-        System.out.println("Plugin enable");
         enabled = true;
     }
 
     @PluginDisable
     public void disable() {
-        System.out.println("Plugin disable");
         disabled = true;
     }
 }

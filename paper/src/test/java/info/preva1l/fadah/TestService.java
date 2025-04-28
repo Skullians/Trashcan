@@ -5,6 +5,9 @@ import info.preva1l.trashcan.flavor.annotations.Configure;
 import info.preva1l.trashcan.flavor.annotations.Service;
 import info.preva1l.trashcan.flavor.annotations.inject.Inject;
 
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+
 /**
  * Created on 28/04/2025
  *
@@ -20,14 +23,25 @@ public class TestService {
 
     @Inject private TestPlugin plugin;
 
+    @Inject private Logger logger;
+    private final CapturingHandler handler = new CapturingHandler();
+
     @Configure
     public void configure() {
         configured = true;
         injected = plugin != null;
+        for (Handler h : logger.getHandlers()) logger.removeHandler(h);
+
+        logger.addHandler(handler);
     }
 
     @Close
     public void close() {
         closed = true;
+    }
+
+    public String testLogger(String testString) {
+        logger.info(testString);
+        return handler.getCapturedOutput();
     }
 }

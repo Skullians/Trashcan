@@ -3,7 +3,6 @@ package info.preva1l.trashcan.flavor.binder;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("FunctionParameterNaming")
 public abstract class FlavorBinderContainer {
     public final List<FlavorBinder<?>> binders = new ArrayList<>();
 

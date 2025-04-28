@@ -4,13 +4,18 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import org.junit.jupiter.api.*;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
 /**
  * Created on 25/04/2025
  *
  * @author Preva1l
  */
-@DisplayName("Trashcan Annotation Tests")
-public class TrashcanAnnotationTests {
+@DisplayName("Trashcan Tests")
+public class TrashcanTests {
     private static ServerMock serverMock;
     private static TestPlugin plugin;
 
@@ -51,7 +56,22 @@ public class TrashcanAnnotationTests {
     }
 
     @Test
-    @DisplayName("Test Plugin Loads")
+    @DisplayName("Test Service Logger")
+    public void testServiceLogger() {
+        String testString = "Hello World!";
+
+        String expected = String.format(
+                "[%tT INFO]: [TestPlugin] [TestService] " + testString,
+                ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
+        );
+
+        String actual = TestService.instance.testLogger(testString);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Test Plugin Disables")
     public void testPluginDisables() {
         serverMock.getPluginManager().disablePlugin(plugin);
         Assertions.assertTrue(plugin.disabled);
