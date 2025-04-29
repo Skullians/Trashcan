@@ -170,14 +170,14 @@ public class Flavor {
 
             if (milli != -1L) {
                 options.getLogger().info(
-                        "[Services] Shutdown [%s] in %sms.".formatted(
+                        "[Services] [%s] Shutdown in %sms.".formatted(
                                 !service.name().isEmpty() ? service.name() : entry.getKey().getSimpleName(),
                                 milli
                         )
                 );
             } else {
                 options.getLogger().info(
-                        "[Services] Failed to shutdown [%s]!".formatted(
+                        "[Services] [%s] Failed to shutdown!".formatted(
                                 !service.name().isEmpty() ? service.name() : entry.getKey().getSimpleName()
                         )
                 );
@@ -198,7 +198,7 @@ public class Flavor {
         try {
             lambda.run();
         } catch (Exception exception) {
-            options.getLogger().log(Level.SEVERE, "Failed to invoke lambda - {}", exception);
+            options.getLogger().log(Level.SEVERE, "Failed to invoke lambda", exception);
             return -1;
         }
 

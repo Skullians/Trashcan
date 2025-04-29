@@ -9,9 +9,18 @@ import org.eclipse.aether.repository.RemoteRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,14 +48,42 @@ public class BaseLibraryLoader implements PluginLoader {
         return Collections.emptyList();
     }
 
+    protected Predicate<Path> remapPredicate() {
+        return p -> true;
+    }
+
+//    @Override
+//    public final void classloader(@NotNull PluginClasspathBuilder classpathBuilder) {
+//        MavenLibraryResolver resolver = new MavenLibraryResolver();
+//        PluginLibraries pluginLibraries = load();
+//        pluginLibraries.asDependencies().forEach(resolver::addDependency);
+//        pluginLibraries.asRepositories().forEach(resolver::addRepository);
+//        resolver.register(path -> classpathBuilder.getContext().getLogger().info(path.toString()));
+//        classpathBuilder.addLibrary(resolver);
+//    }
+
     @Override
     public final void classloader(@NotNull PluginClasspathBuilder classpathBuilder) {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
         PluginLibraries pluginLibraries = load();
+
         pluginLibraries.asDependencies().forEach(resolver::addDependency);
         pluginLibraries.asRepositories().forEach(resolver::addRepository);
-        resolver.register(path -> classpathBuilder.getContext().getLogger().info(path.toString()));
-        classpathBuilder.addLibrary(resolver);
+
+        classpathBuilder.addLibrary(store ->
+                resolver.register(path -> {
+                    Path modified = path;
+                    if (remapPredicate().test(modified)) {
+                        try {
+                            Path tempFile = Files.createTempFile("remapped-", ".jar");
+                            modifyManifest(path, tempFile);
+                            modified = tempFile;
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    store.addLibrary(modified);
+                })
+        );
     }
 
     private PluginLibraries load() {
@@ -71,6 +108,42 @@ public class BaseLibraryLoader implements PluginLoader {
             libraries = new PluginLibraries(new HashMap<>(), Collections.emptyList());
         }
         return libraries;
+    }
+
+    private void modifyManifest(Path file, Path modifiedFile) throws IOException {
+        Path tempJarPath = Files.createTempFile("temp-", ".jar");
+
+        try (JarFile jarFile = new JarFile(file.toFile());
+             JarOutputStream tempJarOutputStream = new JarOutputStream(Files.newOutputStream(tempJarPath))) {
+
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if (JarFile.MANIFEST_NAME.equals(entry.getName())) continue;
+
+                try (InputStream entryInputStream = jarFile.getInputStream(entry)) {
+                    tempJarOutputStream.putNextEntry(new JarEntry(entry.getName()));
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = entryInputStream.read(buffer)) != -1) {
+                        tempJarOutputStream.write(buffer, 0, bytesRead);
+                    }
+                    tempJarOutputStream.closeEntry();
+                }
+            }
+
+            Manifest manifest = jarFile.getManifest();
+            if (manifest == null) {
+                manifest = new Manifest();
+            }
+            manifest.getMainAttributes().putValue("paperweight-mappings-namespace", "spigot");
+
+            tempJarOutputStream.putNextEntry(new JarEntry(JarFile.MANIFEST_NAME));
+            manifest.write(tempJarOutputStream);
+            tempJarOutputStream.closeEntry();
+        }
+
+        Files.move(tempJarPath, modifiedFile, StandardCopyOption.REPLACE_EXISTING);
     }
 
     private record PluginLibraries(Map<String, String> repositories, List<String> dependencies) {
