@@ -1,6 +1,6 @@
 package info.preva1l.fadah;
 
-import info.preva1l.trashcan.plugin.util.ServiceLogFormatter;
+import info.preva1l.trashcan.logging.ServiceLogFormatter;
 
 import java.io.StringWriter;
 import java.util.logging.ConsoleHandler;

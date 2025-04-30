@@ -3,8 +3,9 @@ package info.preva1l.trashcan.flavor.binder.defaults;
 import info.preva1l.trashcan.Version;
 import info.preva1l.trashcan.flavor.annotations.inject.condition.Named;
 import info.preva1l.trashcan.flavor.binder.FlavorBinderContainer;
+import info.preva1l.trashcan.logging.RawDogLogger;
 import info.preva1l.trashcan.plugin.BasePlugin;
-import info.preva1l.trashcan.plugin.util.ServiceLogFormatter;
+import info.preva1l.trashcan.logging.ServiceLogFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
@@ -23,7 +24,7 @@ public class DefaultPluginBinder extends FlavorBinderContainer {
         this.plugin = plugin;
         this.serviceLogger = Logger.getLogger(plugin.getName() + "-Services");
         this.serviceLogger.setUseParentHandlers(false);
-        this.serviceLogger.addHandler(ServiceLogFormatter.asConsoleHandler(plugin.getLogger().getName()));
+        this.serviceLogger.addHandler(ServiceLogFormatter.asConsoleHandler(true, plugin.getLogger().getName()));
     }
 
     @Override

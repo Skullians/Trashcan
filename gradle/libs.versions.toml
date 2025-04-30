@@ -3,6 +3,7 @@
 common-redisson = "3.45.0"
 common-adventure-api = "4.18.0"
 common-reflections = "0.10.2"
+common-log4j = "2.19.0"
 
 # Paper
 paper-api = "1.19.3-R0.1-SNAPSHOT"
@@ -21,6 +22,7 @@ kotlin = "2.1.20"
 common-redisson = { group = "org.redisson", name = "redisson", version.ref = "common-redisson" }
 common-adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "common-adventure-api" }
 common-reflections = { group = "org.reflections", name = "reflections", version.ref = "common-reflections" }
+common-log4j = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "common-log4j" }
 
 # Paper
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
@@ -40,7 +42,7 @@ pluginyml-paper = { id = "net.minecrell.plugin-yml.paper", version = "0.6.0" }
 
 [bundles]
 # Common
-common-provided = [ ]
+common-provided = [ "common-log4j" ]
 common-loaded = [ "common-redisson", "common-adventure-api", "common-reflections" ]
 common-included = [ ]
 

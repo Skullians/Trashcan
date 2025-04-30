@@ -1,4 +1,6 @@
-package info.preva1l.trashcan.plugin.util;
+package info.preva1l.trashcan.logging;
+
+import org.apache.logging.log4j.Level;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,7 +27,11 @@ public class ServiceLogFormatter extends SimpleFormatter {
     }
 
     public static ConsoleHandler asConsoleHandler(String rootLoggerName) {
-        ConsoleHandler handler = new ConsoleHandler();
+        return asConsoleHandler(false, rootLoggerName);
+    }
+
+    public static ConsoleHandler asConsoleHandler(boolean rawDog, String rootLoggerName) {
+        ConsoleHandler handler = rawDog ? new RawDogLogger() : new ConsoleHandler();
         handler.setFormatter(new ServiceLogFormatter(rootLoggerName));
         return handler;
     }
@@ -52,7 +58,13 @@ public class ServiceLogFormatter extends SimpleFormatter {
 
         return FORMAT.formatted(
                 zdt,
-                record.getLevel().getLocalizedName(),
+                switch (record.getLevel().getName()) {
+                    case "SEVERE" -> "ERROR";
+                    case "WARNING" -> "WARN";
+                    case "INFO" -> "INFO";
+                    case "CONFIG" -> "DEBUG";
+                    default -> "TRACE";
+                },
                 rootLoggerName,
                 service,
                 message,
